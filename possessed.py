@@ -1,9 +1,9 @@
 import itertools
 
-import enchant
+import spellchecker
 
 LETTERS = [i for i in range(97, 97 + 26)]
-spellcheck = enchant.Dict('en_US')
+spellcheck = spellchecker.SpellChecker()
 
 
 def decipher(word: str):
@@ -18,8 +18,7 @@ def decipher(word: str):
             }
         )
         result = word.translate(translate_table).lower()
-        if spellcheck.check(result):
-            yield result
+        yield from spellcheck.known((result,))
 
 
 if __name__ == '__main__':
