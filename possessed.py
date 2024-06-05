@@ -10,12 +10,12 @@ spellcheck = spellchecker.SpellChecker()
 def make_possible_word(
     word: str,
     unknown: Iterable[str],
-    product: Iterable[str],
+    permutation: Iterable[str],
 ) -> str:
     translate_table = str.maketrans(
         {
             unknown_letter: possible_letter
-            for unknown_letter, possible_letter in zip(unknown, product)
+            for unknown_letter, possible_letter in zip(unknown, permutation)
         }
     )
     return word.translate(translate_table).lower()
@@ -23,9 +23,10 @@ def make_possible_word(
 
 def decipher(word: str) -> set[str]:
     unknown = {letter for letter in word if letter.islower()}
-    products = itertools.product(LETTERS, repeat=len(unknown))
+    letter_permutations = itertools.permutations(LETTERS, r=len(unknown))
     possible_words = (
-        make_possible_word(word, unknown, product) for product in products
+        make_possible_word(word, unknown, permutation)
+        for permutation in letter_permutations
     )
     return spellcheck.known(possible_words)
 
