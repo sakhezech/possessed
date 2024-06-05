@@ -1,24 +1,33 @@
 import itertools
+from typing import Iterable
 
 import spellchecker
 
-LETTERS = [i for i in range(97, 97 + 26)]
+LETTERS = [chr(i) for i in range(97, 97 + 26)]
 spellcheck = spellchecker.SpellChecker()
 
 
-def decipher(word: str):
-    unknown = {letter for letter in word if letter.islower()}
+def make_possible_word(
+    word: str,
+    unknown: Iterable[str],
+    product: Iterable[str],
+) -> str:
+    translate_table = str.maketrans(
+        {
+            unknown_letter: possible_letter
+            for unknown_letter, possible_letter in zip(unknown, product)
+        }
+    )
+    return word.translate(translate_table).lower()
 
+
+def decipher(word: str) -> set[str]:
+    unknown = {letter for letter in word if letter.islower()}
     products = itertools.product(LETTERS, repeat=len(unknown))
-    for product in products:
-        translate_table = str.maketrans(
-            {
-                unknown_letter: possible_letter
-                for unknown_letter, possible_letter in zip(unknown, product)
-            }
-        )
-        result = word.translate(translate_table).lower()
-        yield from spellcheck.known((result,))
+    possible_words = (
+        make_possible_word(word, unknown, product) for product in products
+    )
+    return spellcheck.known(possible_words)
 
 
 if __name__ == '__main__':
@@ -46,8 +55,8 @@ if __name__ == '__main__':
     output = args.output.open('w') if args.output is not None else sys.stdout
 
     try:
-        for possible_word in decipher(word):
-            output.write(possible_word)
+        for possible_translations in decipher(word):
+            output.write(possible_translations)
             output.write('\n')
     finally:
         output.close()
