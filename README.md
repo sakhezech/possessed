@@ -7,24 +7,14 @@ Deciphering tool for the language of the newly announced Heart Machine game.
 For this to work you will need:
 
 - `python` - general purpose programming language
-- `enchant` - wrapper library for generic spell checking
-- `pyenchant` - python bindings for `enchant`
-- `nuspell` - spellchecking C++ library
-- `hunspell-en_us` - US English dictionary
+- `pyspellchecker` - pure python spell checking
 
-```sh
-# for Arch
-sudo pacman -S enchant nuspell hunspell-en_us
-# for Ubuntu
-sudo apt install enchant-2 nuspell hunspell-en-us python3-venv
-```
-
-Make a virtual environment and install `pyenchant`.
+Make a virtual environment and install `pyspellchecker`.
 
 ```sh
 python3 -m venv .venv
 source .venv/bin/activate
-pip install pyenchant
+pip install pyspellchecker
 ```
 
 ## How to use
