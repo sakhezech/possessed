@@ -43,8 +43,6 @@ if __name__ == '__main__':
     )
     args = parser.parse_args()
 
-    if args.cipher == '-':
-        args.cipher = sys.stdin.read()
     word: str = args.cipher if args.cipher != '-' else sys.stdin.read()
     output = args.output.open('w') if args.output is not None else sys.stdout
 
