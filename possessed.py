@@ -7,7 +7,7 @@ spellcheck = enchant.Dict('en_US')
 
 
 def decipher(word: str):
-    unknown = [letter for letter in word if letter.islower()]
+    unknown = {letter for letter in word if letter.islower()}
 
     products = itertools.product(LETTERS, repeat=len(unknown))
     for product in products:
