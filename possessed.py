@@ -1,5 +1,5 @@
 import itertools
-from typing import Iterable
+from typing import Generator, Iterable
 
 import spellchecker
 
@@ -21,14 +21,16 @@ def make_possible_word(
     return word.translate(translate_table).lower()
 
 
-def decipher(word: str, letters: set[str]) -> set[str]:
+def decipher(word: str, letters: set[str]) -> Generator[str, None, None]:
     unknown = {letter for letter in word if letter.islower()}
     letter_permutations = itertools.permutations(letters, r=len(unknown))
     possible_words = (
         make_possible_word(word, unknown, permutation)
         for permutation in letter_permutations
     )
-    return spellcheck.known(possible_words)
+    for possible_word in possible_words:
+        if not spellcheck.unknown(spellcheck.split_words(possible_word)):
+            yield possible_word
 
 
 if __name__ == '__main__':
