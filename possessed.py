@@ -53,8 +53,10 @@ if __name__ == '__main__':
     from pathlib import Path
 
     parser = argparse.ArgumentParser(
-        description='deciphering tool for the language of the newly announced'
-        ' Heart Machine game',
+        description="""
+        deciphering tool for the language of Possessor(s), Heart Machine's new
+        announced game
+        """,
     )
     parser.add_argument(
         '-k',
@@ -64,7 +66,11 @@ if __name__ == '__main__':
     )
     parser.add_argument(
         'cipher',
-        help='cipher to decode',
+        help="""
+        cipher, known letters in uppercase and substitute unknown
+        symbols with lowercase letters, put multiple letters in
+        brackets like '[DC]ash' for 'Dash' and 'Cash'
+        """,
     )
     parser.add_argument(
         '-o',
