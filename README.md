@@ -1,12 +1,12 @@
 # POSSESSED
 
-Deciphering tool for the language of the newly announced Heart Machine game.
+Deciphering tool for the language of Possessor(s), Heart Machine's new
+announced game.
 
 ## Preparations
 
 For this to work you will need:
 
-- `python` - general purpose programming language
 - `pyspellchecker` - pure python spell checking
 
 Make a virtual environment and install `pyspellchecker`.
@@ -22,7 +22,7 @@ pip install pyspellchecker
 `python3 possessed.py ...`
 
 Write the letters you know in uppercase and substitute letters you don't know
-with some lowercase letters.
+with lowercase letters.
 
 For example:
 
@@ -32,9 +32,7 @@ If we know that the 1st letter is `P` and 3rd, 4th, 6th, 7th, and 10th letters
 are `S` we should invoke the script like this
 
 ```sh
-python3 possessed.py PaSSbSSacS
+python3 possessed.py --known ps PaSSbSSacS
 ```
-
-i.e. we substitute same symbols with same lowercase letters.
 
 For more options see `python3 possessed.py --help`.
