@@ -4,9 +4,8 @@ from typing import Generator, Iterable
 
 import spellchecker
 
-LETTERS = {chr(i) for i in range(97, 97 + 26)}
-spellcheck = spellchecker.SpellChecker()
-brackets = re.compile(r'\[(\w*?)\]')
+SPELLCHECKER = spellchecker.SpellChecker()
+BRACKET_REGEX = re.compile(r'\[(\w*?)\]')
 
 
 def make_possible_word(
@@ -31,15 +30,17 @@ def decipher(word: str, letters: set[str]) -> Generator[str, None, None]:
         for permutation in letter_permutations
     )
     for possible_word in possible_words:
-        if not spellcheck.unknown(spellcheck.split_words(possible_word)):
+        if not SPELLCHECKER.unknown(SPELLCHECKER.split_words(possible_word)):
             yield possible_word
 
 
 def decipher_with_charsets(
     word: str, letters: set[str]
 ) -> Generator[str, None, None]:
-    charsets: list[list[str]] = [list(set_) for set_ in brackets.findall(word)]
-    template = brackets.sub('{}', word)
+    charsets: list[list[str]] = [
+        list(set_) for set_ in BRACKET_REGEX.findall(word)
+    ]
+    template = BRACKET_REGEX.sub('{}', word)
     charset_combinations = itertools.product(*charsets)
     for charset_combination in charset_combinations:
         new_word = template.format(*charset_combination)
@@ -75,11 +76,13 @@ if __name__ == '__main__':
 
     word: str = args.cipher if args.cipher != '-' else sys.stdin.read()
     output = args.output.open('w') if args.output is not None else sys.stdout
-    letters = LETTERS.copy().difference(set(args.known))
+
+    all_letters = {chr(i) for i in range(97, 97 + 26)}
+    letters = all_letters.difference(set(args.known))
 
     try:
-        for possible_translations in decipher_with_charsets(word, letters):
-            output.write(possible_translations)
+        for possible_translation in decipher_with_charsets(word, letters):
+            output.write(possible_translation)
             output.write('\n')
     finally:
         output.close()
