@@ -1,10 +1,12 @@
 import itertools
+import re
 from typing import Generator, Iterable
 
 import spellchecker
 
 LETTERS = {chr(i) for i in range(97, 97 + 26)}
 spellcheck = spellchecker.SpellChecker()
+brackets = re.compile(r'\[(\w*?)\]')
 
 
 def make_possible_word(
@@ -31,6 +33,17 @@ def decipher(word: str, letters: set[str]) -> Generator[str, None, None]:
     for possible_word in possible_words:
         if not spellcheck.unknown(spellcheck.split_words(possible_word)):
             yield possible_word
+
+
+def decipher_with_charsets(
+    word: str, letters: set[str]
+) -> Generator[str, None, None]:
+    charsets: list[list[str]] = [list(set_) for set_ in brackets.findall(word)]
+    template = brackets.sub('{}', word)
+    charset_combinations = itertools.product(*charsets)
+    for charset_combination in charset_combinations:
+        new_word = template.format(*charset_combination)
+        yield from decipher(new_word, letters)
 
 
 if __name__ == '__main__':
@@ -65,7 +78,7 @@ if __name__ == '__main__':
     letters = LETTERS.copy().difference(set(args.known))
 
     try:
-        for possible_translations in decipher(word, letters):
+        for possible_translations in decipher_with_charsets(word, letters):
             output.write(possible_translations)
             output.write('\n')
     finally:
